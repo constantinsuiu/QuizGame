@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+        <div class="row">
+            <div class="col-md-6">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{form | crispy}}
+                    <input type="submit" class="btn btn-primary mt-3" placeholder="Send request">
+                </form>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <!-- Modal -->
+                        <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Message received</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                  {{ message }}
+                              </div>
+                              <div class="modal-footer">
+                                <a href="{% url 'quiz:games-home' %}" class="btn btn-primary">Navigate to Home Page</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Show modal if success -->
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                $("#confirmationModal").modal('show');
+                            });
+                        </script>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <img class="img-thumbnail mb-3" src="{% static 'images/contact_us.svg' %}" alt="Contact Us">
+                <h3>We will reply as soon as possible</h3>
+                <p>We take our project extremely serious, so we try to reply as soon as possible.
+                    If you did not get a reply in the next 48h, please send us an email to:
+                    <a href="mailto:test@testme.com">test@testme.com</a></p>
+            </div>
+        </div>
+{% endblock %}

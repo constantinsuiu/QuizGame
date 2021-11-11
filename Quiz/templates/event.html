@@ -1,0 +1,55 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="row d-flex justify-content-center pt-3">
+        <div class="col-5">
+            <h2>Answer questions to get points:</h2>
+        </div>
+
+    </div>
+     <form action="" method="post">
+         {% csrf_token %}
+        {% for question in data.questions %}
+            <div class="row d-flex justify-content-center">
+                    <div class="col-md-5">
+                          <label for="question-{{question.id}}" class="col-form-label" name="Question">{{ question }}</label>
+                          <select name="{{question}}" class="form-select" aria-label="Default select example" id="question-{{question.id}}" >
+                              <option value="">Select an answer</option>
+                              {% for answer in data.answers %}
+                                <option value="{{answer.answer_text}}">{{ answer.answer_text }}</option>
+                              {% endfor %}
+                          </select>
+                    </div>
+            </div>
+        {% endfor %}
+             <div class="d-flex justify-content-center my-3">
+                 <input class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalCenter" value="Play QuizGame">
+             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Not all questions asked</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to continue?</p>
+                      <p>There are some questions unanswered. Each question answered correctly gets you 1 point,
+                      so it's good to answer all questions.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">I'll go back and answer</button>
+                    <button type="submit" class="btn btn-primary">Yes, I'm sure</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+     </form>
+
+
+{% endblock %}
+

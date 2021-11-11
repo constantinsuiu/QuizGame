@@ -1,0 +1,99 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block content %}
+<p xmlns="http://www.w3.org/1999/html">Welcome {{user.username.capitalize}}</p>
+  <div class="row">
+    <div class="col-2">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <p>{{ data.selected }}</p>
+        {% if view.kwargs.section == "games" %}
+            <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-profile"  aria-selected="false">Profile info</a>
+            <a class="nav-link active show" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-games"  aria-selected="true" >Games Played</a>
+        {% else %}
+            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-profile"  aria-selected="true">Profile info</a>
+            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-games"  aria-selected="false" >Games Played</a>
+        {% endif %}
+
+      </div>
+    </div>
+    <div class="col-10">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+          <div class="row my-3">
+            <div class="col">
+              <label for="username">User name</label>
+              <input id="username" value="{{user.username}}">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="email">Email</label>
+              <input id="email" value="{{user.email}}">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label class="d-inline" for="balance">Current balance</label>
+              <p class="d-inline" id="balance">€{{user.balance}}</p>
+              {% if user.balance > 0 %}
+                <a href="{% url 'quiz:payments' %}" class="btn btn-primary" role="button">Withdraw</a>
+              {% else %}
+                <a href="{% url 'quiz:payments' %}" class="btn btn-primary" role="button">Re-charge</a>
+              {% endif %}
+            </div>
+          </div>
+
+
+        </div>
+        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-tames-tab">
+              <div id="accordion">
+                {% regroup data.events by event as games %}
+                {% for event in games %}
+                <div class="card">
+                  <div class="card-header" id="heading{{event.grouper.id}}">
+                    <h5 class="mb-0">
+                      <div class="row">
+                        <div class="col-auto mr-auto">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{event.grouper.id}}" aria-expanded="false" aria-controls="collapse{{event.grouper.id}}">
+                          {{event.grouper.event}}
+                        </button>
+                      </div>
+
+                      {% for points in data.points %}
+                        {% if points.event.short_name == event.grouper.short_name %}
+                          <div class="col-4 offset-md-4 text-right">
+                              {{points.points}} point(s)
+                          </div>
+                        {% endif %}
+                      {% endfor%}
+                      </div>
+
+                    </h5>
+                  </div>
+
+                  <div id="collapse{{event.grouper.id}}" class="collapse" aria-labelledby="heading{{event.grouper.id}}" data-parent="#accordion">
+                    <div class="card-body">
+                      {% for data in event.list %}
+                        <div class="row">
+                          <div class="col-6 col-sm-3">{{ data.question }}</div>
+                          <div class="col-6 col-sm-3">{{ data.answer }}</div>
+                          <div class="col-6 col-sm-3">{{data.point}}</div>
+                        </div>
+
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+        </div>
+        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+        <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}

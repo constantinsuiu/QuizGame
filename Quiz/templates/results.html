@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="card text-center">
+      <div class="card-header">
+        Test Results
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+          {% for user in data %}
+            <div class="row card-text">
+                <div class="col-6 col-sm-3">
+                    {{user.user.username}}
+                </div>
+                <div class="col-6 col-sm-3">
+                    {{user.points}}
+                </div>
+            </div>
+          {% endfor %}
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+      <div class="card-footer text-muted">
+        You won: 0$
+      </div>
+    </div>
+{% endblock %}

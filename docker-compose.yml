@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: python /app/Quiz/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+  db:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_HOST_AUTH_METHOD: trust
+      volumes: "postgres_data:/var/lib/postgresql/data"
+    volumes:
+     - ./postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

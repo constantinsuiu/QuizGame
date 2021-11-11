@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+{% load static %}
+
+
+{% block content %}
+  <p>This is where you recharge or extract money</p>
+
+  <div class="row">
+    <div class="col">
+      <label class="d-inline" for="balance">Current balance</label>
+      <p class="d-inline" id="balance">€{{user.balance}}</p>
+    </div>
+  </div>
+
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="row d-flex justify-content-center">
+    <div class="col">
+      <label class="d-inline" for="balance">Add funds</label>
+      <input type="number" min="10.00" name="add_funds">
+    </div>
+  </div>
+
+  <div class="row d-flex justify-content-center">
+    <div class="col">
+      <input type="submit" class="form-input">
+    </div>
+  </div>
+</form>
+
+{% endblock %}
