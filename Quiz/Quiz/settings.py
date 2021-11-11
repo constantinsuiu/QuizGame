@@ -200,3 +200,7 @@ EMAIL_USE_SSL = False
 EMAIL_USE_TSL = True
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG
+}
