@@ -1,8 +1,8 @@
 from datetime import datetime
-import pytz
 
-from django.db import models
+import pytz
 from django.contrib.auth import get_user_model
+from django.db import models
 from django.shortcuts import reverse
 
 utc = pytz.UTC
@@ -21,7 +21,7 @@ class Category(models.Model):
     category = models.CharField(max_length=200)
 
     class Meta:
-        verbose_name_plural = 'Categories'
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return self.category
@@ -47,7 +47,9 @@ class Question(models.Model):
 class Game(BaseModel):
     event = models.CharField(max_length=200)
     expiration_date = models.DateTimeField()
-    image = models.ImageField(upload_to='static/images', default='static/images/no-image.jpg')
+    image = models.ImageField(
+        upload_to="static/images", default="static/images/no-image.jpg"
+    )
     result_available = models.BooleanField(default=False)
     short_name = models.CharField(max_length=100)
     question_category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
@@ -58,25 +60,27 @@ class Game(BaseModel):
     def is_active(self):
         self.expired = True
 
-        if self.expiration_date.replace(tzinfo=utc) < datetime.now().replace(tzinfo=utc):
+        if self.expiration_date.replace(tzinfo=utc) < datetime.now().replace(
+            tzinfo=utc
+        ):
             self.expired = False
 
         return self.expired
 
     def get_absolute_url(self):
-        return reverse('quiz:event-page', kwargs={
-            "category": self.question_category,
-            "short_name": self.short_name
-        })
+        return reverse(
+            "quiz:event-page",
+            kwargs={"category": self.question_category, "short_name": self.short_name},
+        )
 
     def get_result_url(self):
-        return reverse('quiz:results', kwargs={
-            "category": self.question_category,
-            "short_name": self.short_name
-        })
+        return reverse(
+            "quiz:results",
+            kwargs={"category": self.question_category, "short_name": self.short_name},
+        )
 
     def __str__(self):
-        return '{} event'.format(self.event)
+        return "{} event".format(self.event)
 
 
 class UserVote(BaseModel):
@@ -88,7 +92,9 @@ class UserVote(BaseModel):
     calculation_complete = models.BooleanField(default=False)
 
     def __str__(self):
-        return '{} - {} - {} - {}'.format(self.user, self.question, self.answer, self.event.short_name)
+        return "{} - {} - {} - {}".format(
+            self.user, self.question, self.answer, self.event.short_name
+        )
 
 
 class UserPoints(BaseModel):
@@ -97,13 +103,15 @@ class UserPoints(BaseModel):
     points = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name_plural = 'User Points'
+        verbose_name_plural = "User Points"
 
     def get_absolute_url(self):
-        return reverse('quiz:results', kwargs={
-            'category': self.question_category,
-            'short_name': self.short_name
-        })
+        return reverse(
+            "quiz:results",
+            kwargs={"category": self.question_category, "short_name": self.short_name},
+        )
 
     def __str__(self):
-        return '{} - {} - {} points'.format(self.user, self.event.short_name, self.points)
+        return "{} - {} - {} points".format(
+            self.user, self.event.short_name, self.points
+        )

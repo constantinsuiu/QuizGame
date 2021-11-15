@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
-from pathlib import Path
 
+import dj_database_url
 import environ
+from pathlib import Path
 
 # Reading .env file to get data
 env = environ.Env(
@@ -54,12 +55,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'crispy_forms',
     'environ',
+    'debug_toolbar',
+    'django_extensions',
     # # Local
     'contact',
-    'debug_toolbar',
     'game',
     'results',
-    'Users',
+    'quiz_user',
 ]
 
 MIDDLEWARE = [
@@ -73,7 +75,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Quiz.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -98,15 +100,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': env('DB_USERNAME'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': 'db',
-        'PORT': 5432,
-    }
+    "default": dj_database_url.config()
+    if os.getenv("DATABASE_URL")
+    else {"ENGINE": "django.db.backends.postgresql", "NAME": "suiu_quiz"}
 }
+DATABASES["default"].update({"ATOMIC_REQUESTS": True, "CONN_MAX_AGE": 600})
 
 
 # Password validation
@@ -152,7 +150,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # New values
-AUTH_USER_MODEL = 'Users.CustomUser'
+AUTH_USER_MODEL = 'quiz_user.CustomUser'
 
 
 INTERNAL_IPS = [
@@ -192,3 +190,7 @@ EMAIL_USE_TSL = True
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 DEBUG_TOOLBAR_CONFIG = {'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG}
+
+GRAPH_MODELS = {
+  'app_labels': ["game", "quiz_user", "results"],
+}
